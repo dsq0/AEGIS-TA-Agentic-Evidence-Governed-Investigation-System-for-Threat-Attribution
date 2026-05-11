@@ -1,0 +1,35 @@
+# AEGIS-TA — Agentic Evidence-Governed Investigation System for Threat Attribution
+# 根目录配置（main.py 默认加载）
+
+system_name: "AEGIS-TA"
+system_name_zh: "面向威胁组织归因的证据约束多Agent调查框架"
+
+runtime:
+  # 论文主实验建议 false：真正的分阶段 Agent 执行（Preprocess→TTP→Profile→RAG→…）。
+  # 快速对齐旧管线请用: python main.py ... --config config_fast.yaml
+  monolith_bundle: false
+  top_k: 5
+  # 与指导一致：每步执行后 Guardrails + Verifier + apply_verification（降权/Planner 信号）
+  verify_every_step: true
+  max_harness_steps: 96
+
+planner:
+  margin_threshold: 0.012
+  entropy_threshold: 2.35
+  min_graph_paths: 1
+  ttp_coverage_threshold: 0.25
+  max_graph_expansions: 1
+
+harness:
+  contrast_merge_weight: 0.14
+  discriminative_eta: 0.12
+  verification_downweight_beta: 0.06
+  broken_path_rate_downweight_threshold: 0.35
+
+judge:
+  penalty_unverified_lambda: 0.08
+  penalty_conflict_mu: 0.05
+
+guardrails:
+  forbid_attribution_without_ttp: true
+  require_train_index_for_rag: true
